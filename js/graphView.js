@@ -445,6 +445,7 @@ class ProductionGraphView {
     let initialNodeY = 0;
     let hasMoved = false;
 
+    // Mouse drag
     nodeG.addEventListener("mousedown", (e) => {
       if (e.target.closest("select, option, button, input, label")) return;
       e.stopPropagation();
@@ -478,6 +479,45 @@ class ProductionGraphView {
       window.addEventListener("mousemove", onMouseMove);
       window.addEventListener("mouseup", onMouseUp);
     });
+
+    // Touch drag for mobile/tablet devices
+    nodeG.addEventListener("touchstart", (e) => {
+      if (e.target.closest("select, option, button, input, label")) return;
+      if (e.touches.length !== 1) return;
+      e.stopPropagation();
+
+      const pos = this.nodePositions.get(node.id);
+      if (!pos) return;
+
+      const touch = e.touches[0];
+      startX = touch.clientX;
+      startY = touch.clientY;
+      initialNodeX = pos.x;
+      initialNodeY = pos.y;
+      hasMoved = false;
+
+      const onTouchMove = (moveEvt) => {
+        if (moveEvt.touches.length !== 1) return;
+        moveEvt.preventDefault();
+        const curTouch = moveEvt.touches[0];
+        const dx = (curTouch.clientX - startX) / this.zoom;
+        const dy = (curTouch.clientY - startY) / this.zoom;
+        if (Math.abs(dx) > 3 || Math.abs(dy) > 3) hasMoved = true;
+
+        pos.x = initialNodeX + dx;
+        pos.y = initialNodeY + dy;
+        nodeG.setAttribute("transform", `translate(${pos.x}, ${pos.y})`);
+        this.updateLinksForNode(node.id);
+      };
+
+      const onTouchEnd = () => {
+        window.removeEventListener("touchmove", onTouchMove);
+        window.removeEventListener("touchend", onTouchEnd);
+      };
+
+      window.addEventListener("touchmove", onTouchMove, { passive: false });
+      window.addEventListener("touchend", onTouchEnd);
+    }, { passive: true });
 
     // Hover highlighting
     nodeG.addEventListener("mouseenter", () => {
@@ -601,6 +641,70 @@ class ProductionGraphView {
 
       this.updateTransform();
     }, { passive: false });
+
+    // Touch Support: Pan & Pinch-to-Zoom for mobile & tablets
+    let initialTouchDistance = null;
+    let initialTouchZoom = 1;
+    let touchPanStart = null;
+
+    this.svgContainer.addEventListener("touchstart", (e) => {
+      if (e.target.closest(".graph-node")) return;
+      if (e.touches.length === 1) {
+        this.isPanning = true;
+        touchPanStart = {
+          x: e.touches[0].clientX - this.panX,
+          y: e.touches[0].clientY - this.panY
+        };
+      } else if (e.touches.length === 2) {
+        this.isPanning = false;
+        const dx = e.touches[0].clientX - e.touches[1].clientX;
+        const dy = e.touches[0].clientY - e.touches[1].clientY;
+        initialTouchDistance = Math.hypot(dx, dy);
+        initialTouchZoom = this.zoom;
+      }
+    }, { passive: true });
+
+    this.svgContainer.addEventListener("touchmove", (e) => {
+      if (e.target.closest(".graph-node")) return;
+      if (e.touches.length === 1 && this.isPanning && touchPanStart) {
+        e.preventDefault();
+        this.panX = e.touches[0].clientX - touchPanStart.x;
+        this.panY = e.touches[0].clientY - touchPanStart.y;
+        this.updateTransform();
+      } else if (e.touches.length === 2 && initialTouchDistance) {
+        e.preventDefault();
+        const dx = e.touches[0].clientX - e.touches[1].clientX;
+        const dy = e.touches[0].clientY - e.touches[1].clientY;
+        const currentDistance = Math.hypot(dx, dy);
+        const scale = currentDistance / initialTouchDistance;
+        const newZoom = Math.min(3, Math.max(0.2, initialTouchZoom * scale));
+
+        const rect = this.svgContainer.getBoundingClientRect();
+        const midX = (e.touches[0].clientX + e.touches[1].clientX) / 2 - rect.left;
+        const midY = (e.touches[0].clientY + e.touches[1].clientY) / 2 - rect.top;
+
+        this.panX = midX - (midX - this.panX) * (newZoom / this.zoom);
+        this.panY = midY - (midY - this.panY) * (newZoom / this.zoom);
+        this.zoom = newZoom;
+
+        this.updateTransform();
+      }
+    }, { passive: false });
+
+    this.svgContainer.addEventListener("touchend", (e) => {
+      if (e.touches.length === 0) {
+        this.isPanning = false;
+        touchPanStart = null;
+        initialTouchDistance = null;
+      } else if (e.touches.length === 1) {
+        this.isPanning = true;
+        touchPanStart = {
+          x: e.touches[0].clientX - this.panX,
+          y: e.touches[0].clientY - this.panY
+        };
+        initialTouchDistance = null;
+      }
+    });
   }
 
   adjustZoom(factor) {

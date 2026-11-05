@@ -1379,6 +1379,9 @@ body.graph-fs-active {
   cursor: grab;
   position: relative;
   overflow: hidden;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 .graph-svg {
@@ -1543,12 +1546,6 @@ body.graph-fs-active {
   display: grid;
   grid-template-columns: 2fr 1fr;
   gap: 20px;
-}
-
-@media (max-width: 1024px) {
-  .summary-grid {
-    grid-template-columns: 1fr;
-  }
 }
 
 .summary-card {
@@ -1972,3 +1969,571 @@ body.graph-fs-active {
 .text-center { text-align: center; }
 .text-right { text-align: right; }
 .text-muted { color: var(--text-muted); }
+
+/* ==========================================================================
+   Responsive Design & Mobile Optimization
+   Breakpoints: 1200px, 992px, 768px, 576px, 400px
+   ========================================================================== */
+
+/* 1. Large Tablets & Small Laptops (<= 1200px) */
+@media (max-width: 1200px) {
+  .main-layout {
+    max-width: 100%;
+    padding: 20px 16px;
+    gap: 16px;
+  }
+
+  .app-header {
+    padding: 12px 20px;
+  }
+
+  .header-stats {
+    gap: 10px;
+  }
+
+  .header-stat-box {
+    padding: 5px 10px;
+  }
+
+  .header-stat-box .stat-label {
+    font-size: 9.5px;
+  }
+
+  .header-stat-box .stat-val {
+    font-size: 14px;
+  }
+
+  .summary-grid {
+    grid-template-columns: 1.5fr 1fr;
+    gap: 16px;
+  }
+}
+
+/* 2. Tablets in Portrait & Medium Devices (<= 992px) */
+@media (max-width: 992px) {
+  .app-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+    padding: 12px 18px;
+    position: relative;
+  }
+
+  .brand-wrapper {
+    justify-content: flex-start;
+  }
+
+  .header-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    width: 100%;
+  }
+
+  .header-stat-box {
+    align-items: center;
+    text-align: center;
+    padding: 6px 8px;
+    width: 100%;
+  }
+
+  .summary-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .options-bar-content {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 10px;
+    align-items: stretch;
+  }
+
+  .f-opt-group {
+    background: rgba(26, 35, 45, 0.45);
+    padding: 6px 10px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+  }
+
+  .somersloop-actions {
+    grid-column: 1 / -1;
+    border-left: none;
+    border-top: 1px dashed var(--border-color);
+    padding: 10px 0 0 0;
+    margin-top: 4px;
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .btn-sloop-quick {
+    flex: 1;
+    min-width: 80px;
+    justify-content: center;
+    text-align: center;
+    min-height: 32px;
+  }
+
+  #btn-reset-recipes {
+    grid-column: 1 / -1;
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+/* 3. Small Tablets & Large Smartphones (<= 768px) */
+@media (max-width: 768px) {
+  body {
+    font-size: 13.5px;
+  }
+
+  .main-layout {
+    padding: 12px 10px;
+    gap: 12px;
+  }
+
+  .brand-titles h1 {
+    font-size: 18px;
+  }
+
+  .brand-logo-badge {
+    font-size: 13px;
+    padding: 4px 8px;
+  }
+
+  .brand-titles p {
+    font-size: 11px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 280px;
+  }
+
+  /* Control Panel */
+  .control-panel {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 14px 12px;
+    gap: 14px;
+  }
+
+  .target-select-section {
+    flex: none;
+    width: 100%;
+  }
+
+  .item-picker-trigger {
+    max-width: 100%;
+    width: 100%;
+    padding: 10px 14px;
+  }
+
+  .rate-input-section {
+    flex: none;
+    width: 100%;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 10px;
+  }
+
+  .rate-input-wrapper {
+    flex: 1;
+    min-width: 120px;
+  }
+
+  .rate-presets {
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+
+  .rate-presets .btn {
+    padding: 6px 10px;
+    font-size: 12px;
+    min-height: 36px;
+  }
+
+  /* Presets Bar */
+  .presets-bar {
+    padding: 10px 12px;
+    gap: 8px;
+  }
+
+  .presets-label {
+    width: 100%;
+    font-size: 11px;
+  }
+
+  .preset-btn {
+    font-size: 11.5px;
+    padding: 6px 12px;
+    min-height: 32px;
+  }
+
+  /* View Navigation */
+  .view-nav {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+    padding-bottom: 10px;
+  }
+
+  .view-tabs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    width: 100%;
+    gap: 6px;
+  }
+
+  .tab-btn {
+    justify-content: center;
+    padding: 10px;
+    font-size: 13px;
+    border-radius: var(--radius-sm);
+  }
+
+  .view-actions {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    gap: 8px;
+  }
+
+  .view-actions .btn {
+    flex: 1 1 calc(50% - 4px);
+    justify-content: center;
+    padding: 9px 8px;
+    font-size: 11.5px;
+    min-height: 38px;
+  }
+
+  .fullscreen-hint {
+    display: none !important;
+  }
+
+  /* Tree View */
+  .tree-root-wrapper {
+    padding: 12px 6px;
+  }
+
+  .tree-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+    padding-bottom: 12px;
+    margin-bottom: 12px;
+  }
+
+  .tree-toolbar-actions {
+    width: 100%;
+    display: flex;
+    gap: 8px;
+  }
+
+  .tree-toolbar-actions .btn {
+    flex: 1;
+    justify-content: center;
+    min-height: 34px;
+  }
+
+  .tree-children {
+    margin-left: 8px;
+    padding-left: 8px;
+    border-left-width: 1.5px;
+  }
+
+  .tree-children::before {
+    width: 8px;
+  }
+
+  .tree-card {
+    padding: 10px 8px;
+  }
+
+  .tree-card-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+
+  .card-item-info {
+    width: 100%;
+  }
+
+  .card-rate-badge {
+    align-self: flex-start;
+  }
+
+  .tree-card-body {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  .recipe-selector-box {
+    width: 100%;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 4px;
+  }
+
+  .recipe-label {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 4px;
+  }
+
+  .recipe-select {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .node-machine-row {
+    width: 100%;
+    justify-content: space-between;
+    gap: 8px;
+  }
+
+  .node-modifiers-row {
+    width: 100%;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+
+  .clock-control-group {
+    width: 100%;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .somersloop-control-group {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .btn-somersloop-toggle {
+    width: 100%;
+    justify-content: center;
+    min-height: 34px;
+  }
+
+  /* Graph View */
+  .graph-wrapper {
+    height: 520px;
+  }
+
+  .graph-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+    padding: 10px;
+  }
+
+  .graph-toolbar-actions {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  .graph-toolbar-actions .btn {
+    min-height: 36px;
+    padding: 6px 12px;
+  }
+
+  /* Tables & Summary */
+  .summary-card {
+    padding: 14px 10px;
+  }
+
+  .table-responsive {
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .machines-table th,
+  .machines-table td {
+    padding: 8px 6px;
+    font-size: 11px;
+  }
+
+  .building-badge-cell {
+    gap: 6px;
+    padding-left: 6px;
+  }
+
+  .ceiling-highlight {
+    padding: 3px 6px;
+  }
+
+  .ceil-num {
+    font-size: 14px;
+  }
+
+  .ceil-tag {
+    font-size: 8px;
+  }
+
+  .raw-res-card {
+    padding: 10px;
+  }
+
+  .raw-card-top {
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .raw-purity-control {
+    width: 100%;
+    justify-content: space-between;
+    margin-top: 4px;
+  }
+
+  .raw-logistics-line {
+    font-size: 10.5px;
+    gap: 6px;
+  }
+
+  /* Modal */
+  .modal-dialog {
+    width: 96%;
+    max-width: 96%;
+    max-height: 90vh;
+    border-radius: var(--radius-sm);
+  }
+
+  .modal-header {
+    padding: 12px 14px;
+  }
+
+  .modal-header h3 {
+    font-size: 16px;
+  }
+
+  .modal-body {
+    padding: 12px 14px;
+    gap: 10px;
+  }
+
+  .modal-category-filters {
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 6px;
+    gap: 6px;
+  }
+
+  .modal-category-filters .btn {
+    white-space: nowrap;
+    flex-shrink: 0;
+    padding: 6px 12px;
+    font-size: 11px;
+  }
+
+  .modal-items-grid {
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    gap: 8px;
+    max-height: 52vh;
+  }
+
+  .modal-item-card {
+    padding: 8px 10px;
+    gap: 8px;
+  }
+
+  .m-item-icon {
+    width: 26px;
+    height: 26px;
+  }
+
+  .m-item-title {
+    font-size: 12px;
+  }
+
+  .m-item-sub {
+    font-size: 10px;
+  }
+}
+
+/* 4. Mobile Phones (<= 576px) */
+@media (max-width: 576px) {
+  .header-stats {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 6px;
+  }
+
+  .header-stat-box {
+    padding: 5px 6px;
+  }
+
+  .header-stat-box .stat-label {
+    font-size: 9px;
+  }
+
+  .header-stat-box .stat-val {
+    font-size: 13px;
+  }
+
+  .brand-titles p {
+    display: none;
+  }
+
+  .options-bar-content {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .view-actions .btn {
+    flex: 1 1 100%;
+  }
+
+  .modal-items-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+  }
+
+  .clock-pills {
+    width: 100%;
+    display: flex;
+  }
+
+  .btn-clock-pill {
+    flex: 1;
+    text-align: center;
+    padding: 4px 2px;
+    font-size: 10px;
+  }
+
+  .app-footer {
+    padding: 16px 10px;
+    font-size: 11px;
+  }
+}
+
+/* 5. Ultra-Small Devices (<= 400px) */
+@media (max-width: 400px) {
+  .brand-titles h1 {
+    font-size: 15px;
+  }
+
+  .brand-logo-badge {
+    font-size: 11px;
+    padding: 3px 6px;
+    letter-spacing: 1px;
+  }
+
+  .rate-presets {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    width: 100%;
+  }
+
+  .modal-items-grid {
+    grid-template-columns: 1fr;
+  }
+}
