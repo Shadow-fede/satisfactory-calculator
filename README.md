@@ -90,6 +90,13 @@ Sono state revisionate e corrette tutte le ricette standard e alternative in bas
 9. **Copia Piano di Fabbrica (Shopping List)**:
    - Un click sul pulsante "Copia Piano di Fabbrica" copia un riepilogo completo e dettagliato negli appunti: macchinari arrotondati, modificatori di clock e Somersloop, frammenti energetici totali, consumi MW, trivelle, purezze e nastri necessari.
 
+10. **Design Completamente Responsive & Gesture Touch per Mobile e Tablet**:
+   - Layout fluido ottimizzato per tutti i dispositivi con breakpoint dedicati a 1200px, 992px, 768px, 576px e 400px.
+   - Header e statistiche riorganizzati in griglia adattiva su tablet e smartphone.
+   - Pannello di opzioni logistica, overlock e Somersloop formattati per controlli touch facili e intuitivi.
+   - **Supporto Touch nel Grafo SVG**: pan con scorrimento a un dito, **pinch-to-zoom a due dita**, e trascinamento touch dei singoli nodi della fabbrica.
+   - Finestra modale di selezione oggetti e categorie ottimizzate per lo scorrimento orizzontale/verticale su schermi ridotti.
+
 ---
 
 ## 🛠️ Come Avviare l'Applicazione
