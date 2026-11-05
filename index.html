@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Satisfactory Calculator - FICSIT Production Planner</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚙️</text></svg>">
+</head>
+<body>
+
+  <!-- Top Navigation & Branding -->
+  <header class="app-header">
+    <div class="brand-wrapper">
+      <div class="brand-logo-badge">FICSIT INC.</div>
+      <div class="brand-titles">
+        <h1>Satisfactory <span>Calculator</span></h1>
+        <p>Pianificatore di produzione industriale 1.0 &bull; Albero e Grafo di Produzione &bull; Macchinari per eccesso</p>
+      </div>
+    </div>
+
+    <div class="header-stats">
+      <div class="header-stat-box">
+        <span class="stat-label">Macchinari Reali (Eccesso)</span>
+        <span class="stat-val" id="stat-total-machines">0</span>
+      </div>
+      <div class="header-stat-box">
+        <span class="stat-label">Carico Energetico</span>
+        <span class="stat-val stat-cyan" id="stat-total-power">0 MW</span>
+      </div>
+      <div class="header-stat-box">
+        <span class="stat-label">Potenza Picco Max</span>
+        <span class="stat-val" id="stat-total-power-peak">0 MW</span>
+      </div>
+      <div class="header-stat-box">
+        <span class="stat-label">Risorse Grezze</span>
+        <span class="stat-val stat-cyan" id="stat-total-raw">0 tipi</span>
+      </div>
+      <div class="header-stat-box" title="Frammenti energetici necessari per l'overclock">
+        <span class="stat-label"><img src="assets/images/items/power_shard.png" class="game-icon-xs" alt=""> Frammenti</span>
+        <span class="stat-val stat-yellow" id="stat-total-shards">0</span>
+      </div>
+      <div class="header-stat-box" title="Somersloop utilizzati per amplificare la produzione (2x output)">
+        <span class="stat-label"><img src="assets/images/items/somersloop.png" class="game-icon-xs" alt=""> Somersloop</span>
+        <span class="stat-val stat-purple" id="stat-total-somersloops">0</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="main-layout">
+
+    <!-- Control Panel -->
+    <section class="control-panel">
+      <!-- Target Item Picker Trigger -->
+      <div class="target-select-section">
+        <button class="item-picker-trigger" id="item-picker-btn" title="Clicca per scegliere l'oggetto da produrre">
+          <span class="target-icon-slot" id="current-item-icon"></span>
+          <div class="text-col">
+            <span class="main-name" id="current-item-name">Telaio Modulare Pesante</span>
+            <span class="sub-name" id="current-item-en">(Heavy Modular Frame)</span>
+          </div>
+          <i class="fas fa-search chevron"></i>
+        </button>
+      </div>
+
+      <!-- Target Rate Section -->
+      <div class="rate-input-section">
+        <span class="rate-label-text">Produzione Obiettivo:</span>
+        <div class="rate-input-wrapper">
+          <input type="number" id="target-rate-input" class="rate-input" value="2" min="0.1" step="0.5">
+          <span class="rate-unit-tag">/ min</span>
+        </div>
+        <div class="rate-presets">
+          <button class="btn btn-sm btn-outline btn-rate-preset" data-delta="-1">-1</button>
+          <button class="btn btn-sm btn-outline btn-rate-preset" data-delta="1">+1</button>
+          <button class="btn btn-sm btn-outline btn-rate-preset" data-delta="5">+5</button>
+          <button class="btn btn-sm btn-outline btn-rate-preset" data-set="10">10</button>
+          <button class="btn btn-sm btn-outline btn-rate-preset" data-set="30">30</button>
+          <button class="btn btn-sm btn-outline btn-rate-preset" data-set="60">60</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Quick Factory Presets -->
+    <div class="presets-bar">
+      <span class="presets-label"><i class="fas fa-bolt"></i> Preset Rapidi:</span>
+      <button class="preset-btn" data-item="heavy_modular_frame" data-rate="2">
+        <img src="assets/images/items/heavy_modular_frame.png" class="game-icon-xs" alt=""> 2x Telaio Pesante (HMF)
+      </button>
+      <button class="preset-btn" data-item="computer" data-rate="10">
+        <img src="assets/images/items/computer.png" class="game-icon-xs" alt=""> 10x Computer
+      </button>
+      <button class="preset-btn" data-item="motor" data-rate="20">
+        <img src="assets/images/items/motor.png" class="game-icon-xs" alt=""> 20x Motori
+      </button>
+      <button class="preset-btn" data-item="turbo_motor" data-rate="4">
+        <img src="assets/images/items/turbo_motor.png" class="game-icon-xs" alt=""> 4x Turbo Motori
+      </button>
+      <button class="preset-btn" data-item="reinforced_iron_plate" data-rate="30">
+        <img src="assets/images/items/reinforced_iron_plate.png" class="game-icon-xs" alt=""> 30x Piastre Rinforzate
+      </button>
+      <button class="preset-btn" data-item="nuclear_pasta" data-rate="1">
+        <img src="assets/images/items/nuclear_pasta.png" class="game-icon-xs" alt=""> 1x Pasta Nucleare
+      </button>
+      <button class="preset-btn" data-item="modular_engine" data-rate="5">
+        <img src="assets/images/items/modular_engine.png" class="game-icon-xs" alt=""> 5x Motori Modulari
+      </button>
+    </div>
+
+    <!-- Factory Logistics, Overclock & Somersloop Settings Bar -->
+    <section class="factory-options-bar">
+      <div class="options-bar-title">
+        <i class="fas fa-sliders-h"></i> <span>Logistica & Modificatori FICSIT 1.0</span>
+      </div>
+
+      <div class="options-bar-content">
+        <div class="f-opt-group">
+          <label for="setting-miner-tier" class="f-opt-label">
+            <i class="fas fa-hammer"></i> Trivella:
+          </label>
+          <select id="setting-miner-tier" class="f-opt-select" title="Livello delle trivelle per estrarre le risorse solide">
+            <option value="miner_mk1">Trivella Mk.1 (60/m, 5 MW)</option>
+            <option value="miner_mk2" selected>Trivella Mk.2 (120/m, 12 MW)</option>
+            <option value="miner_mk3">Trivella Mk.3 (240/m, 30 MW)</option>
+          </select>
+        </div>
+
+        <div class="f-opt-group">
+          <label for="setting-node-purity" class="f-opt-label">
+            <i class="fas fa-gem"></i> Purezza Nodi:
+          </label>
+          <select id="setting-node-purity" class="f-opt-select" title="Purezza predefinita dei giacimenti di minerale">
+            <option value="impure">Nodi Impuri (0.5x)</option>
+            <option value="normal" selected>Nodi Normali (1.0x)</option>
+            <option value="pure">Nodi Puri (2.0x)</option>
+          </select>
+        </div>
+
+        <div class="f-opt-group">
+          <label for="setting-belt-tier" class="f-opt-label">
+            <i class="fas fa-exchange-alt"></i> Nastro (Cap):
+          </label>
+          <select id="setting-belt-tier" class="f-opt-select" title="Capacità massima per linea di convogliamento">
+            <option value="belt_mk1">Nastro Mk.1 (60/min)</option>
+            <option value="belt_mk2">Nastro Mk.2 (120/min)</option>
+            <option value="belt_mk3">Nastro Mk.3 (270/min)</option>
+            <option value="belt_mk4">Nastro Mk.4 (480/min)</option>
+            <option value="belt_mk5" selected>Nastro Mk.5 (780/min)</option>
+            <option value="belt_mk6">Nastro Mk.6 1.0 (1200/min)</option>
+          </select>
+        </div>
+
+        <div class="f-opt-group">
+          <label for="setting-global-clock" class="f-opt-label">
+            <img src="assets/images/items/power_shard.png" class="game-icon-xs" alt=""> Overclock Globale:
+          </label>
+          <select id="setting-global-clock" class="f-opt-select" title="Clock speed predefinito per tutti i macchinari">
+            <option value="100" selected>100% (Standard - 0 Frammenti)</option>
+            <option value="150">150% (+50% - 1 Frammento)</option>
+            <option value="200">200% (+100% - 2 Frammenti)</option>
+            <option value="250">250% MAX (3 Frammenti)</option>
+          </select>
+        </div>
+
+        <div class="f-opt-group somersloop-actions">
+          <span class="f-opt-label">
+            <img src="assets/images/items/somersloop.png" class="game-icon-xs" alt=""> Somersloop:
+          </span>
+          <button class="btn btn-sm btn-outline btn-sloop-quick" id="btn-sloop-target" title="Raddoppia output (+100%) solo per il prodotto finale">
+            <i class="fas fa-magic"></i> Prodotto Finale
+          </button>
+          <button class="btn btn-sm btn-outline btn-sloop-quick" id="btn-sloop-all" title="Attiva raddoppio Somersloop su tutta la filiera">
+            <i class="fas fa-atom"></i> Tutta la Fabbrica
+          </button>
+          <button class="btn btn-sm btn-outline btn-sloop-quick" id="btn-sloop-reset" title="Disattiva tutte le amplificazioni Somersloop">
+            <i class="fas fa-times"></i> Azzera
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- View Switcher & Action Tabs -->
+    <div class="view-nav">
+      <div class="view-tabs">
+        <button class="tab-btn active" id="tab-tree-btn">
+          <i class="fas fa-sitemap"></i> Albero di Produzione (Production Tree)
+        </button>
+        <button class="tab-btn" id="tab-graph-btn">
+          <i class="fas fa-project-diagram"></i> Diagramma di Flusso (Production Graph)
+        </button>
+      </div>
+
+      <div class="view-actions">
+        <span class="badge badge-alt-count" id="active-overrides-count" style="display:none;">0 personalizzate</span>
+        <button class="btn btn-sm btn-outline" id="btn-fullscreen-graph" style="display:none;" title="Ingrandisci il diagramma a schermo intero (Tasto F)">
+          <i class="fas fa-expand"></i> Schermo Intero
+        </button>
+        <button class="btn btn-sm btn-outline" id="btn-reset-recipes" title="Ripristina tutte le ricette alle loro impostazioni standard">
+          <i class="fas fa-undo"></i> Ripristina Ricette Standard
+        </button>
+        <button class="btn btn-sm btn-primary" id="btn-copy-shopping-list" title="Copia lista macchinari e materiali negli appunti">
+          <i class="fas fa-clipboard-list"></i> Copia Piano di Fabbrica
+        </button>
+      </div>
+    </div>
+
+    <!-- Views Container -->
+    <section class="view-panel">
+      <!-- Tree View Container -->
+      <div id="tree-view-container"></div>
+
+      <!-- Graph View Container -->
+      <div id="graph-view-container" style="display:none;"></div>
+    </section>
+
+    <!-- Machinery & Raw Resources Breakdown -->
+    <section class="summary-grid">
+      <!-- Left: Machinery List Rounded Up (Arrotondati per eccesso) -->
+      <div class="summary-card">
+        <div class="summary-card-header">
+          <h3>
+            <i class="fas fa-industry"></i> Elenco Macchinari Necessari
+          </h3>
+          <span class="badge badge-alt-count">Arrotondati per Eccesso (Ceiling)</span>
+        </div>
+
+        <div class="table-responsive">
+          <table class="machines-table">
+            <thead>
+              <tr>
+                <th>Macchinario</th>
+                <th class="text-center" title="Numero reale di strutture da piazzare (arrotondato per eccesso)">Costruisci (Eccesso)</th>
+                <th class="text-center" title="Carico teorico frazionario esatto">Esatto</th>
+                <th>Dettaglio Linee & Ricette</th>
+                <th class="text-center">Modificatori (Clock / Sloop)</th>
+                <th class="text-right">Potenza</th>
+              </tr>
+            </thead>
+            <tbody id="machines-table-body">
+              <!-- Dynamically populated -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Right: Raw Resources Required -->
+      <div class="summary-card">
+        <div class="summary-card-header">
+          <h3>
+            <i class="fas fa-mountain"></i> Risorse Grezze Richieste
+          </h3>
+          <span class="badge badge-alt-count">Nodi & Trivelle</span>
+        </div>
+
+        <div class="raw-resources-grid" id="raw-resources-grid">
+          <!-- Dynamically populated -->
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Modal: Item Picker -->
+  <div class="modal-overlay" id="item-picker-modal">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3><i class="fas fa-cube"></i> Scegli l'Oggetto da Produrre</h3>
+        <button class="btn-close-modal" id="close-item-modal">&times;</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="modal-search-wrapper">
+          <i class="fas fa-search"></i>
+          <input type="text" id="modal-item-search" class="modal-search-input" placeholder="Cerca oggetto (es. Vite, Computer, Rotore, Motore...)...">
+        </div>
+
+        <div class="modal-category-filters" id="modal-category-filters">
+          <!-- Category buttons -->
+        </div>
+
+        <div class="modal-items-grid" id="modal-items-grid">
+          <!-- Item Cards -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="app-footer">
+    <p>Satisfactory Production Calculator &bull; Ispirato a <a href="https://satisfactorycalculator.net/" target="_blank">satisfactorycalculator.net</a> e alla community di Satisfactory &bull; Dati compatibili con Satisfactory 1.0</p>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="data/gameData.js"></script>
+  <script src="js/calculator.js"></script>
+  <script src="js/treeView.js"></script>
+  <script src="js/graphView.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

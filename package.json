@@ -1,0 +1,19 @@
+{
+  "name": "satisfactory-calculator",
+  "version": "1.0.0",
+  "description": "Satisfactory Production Calculator & Factory Planner basato su satisfactorycalculator.net con albero, grafo interattivo, ricette alternative e macchinari arrotondati per eccesso.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "serve": "node server.js"
+  },
+  "keywords": [
+    "satisfactory",
+    "production-planner",
+    "factory-calculator",
+    "alternate-recipes",
+    "ficsit"
+  ],
+  "author": "Antigravity",
+  "license": "MIT"
+}
